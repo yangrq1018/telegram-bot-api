@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
+	tgbotapi "github.com/yangrq1018/telegram-bot-api/v5"
 )
 
 const (
@@ -549,8 +549,8 @@ func TestSendWithMediaGroup(t *testing.T) {
 	bot, _ := getBot(t)
 
 	cfg := tgbotapi.NewMediaGroup(ChatID, []interface{}{
-		tgbotapi.NewInputMediaPhoto("https://github.com/go-telegram-bot-api/telegram-bot-api/raw/0a3a1c8716c4cd8d26a262af9f12dcbab7f3f28c/tests/image.jpg"),
-		tgbotapi.NewInputMediaVideo("https://github.com/go-telegram-bot-api/telegram-bot-api/raw/0a3a1c8716c4cd8d26a262af9f12dcbab7f3f28c/tests/video.mp4"),
+		tgbotapi.NewInputMediaPhoto("https://github.com/yangrq1018/telegram-bot-api/v5/raw/0a3a1c8716c4cd8d26a262af9f12dcbab7f3f28c/tests/image.jpg"),
+		tgbotapi.NewInputMediaVideo("https://github.com/yangrq1018/telegram-bot-api/v5/raw/0a3a1c8716c4cd8d26a262af9f12dcbab7f3f28c/tests/video.mp4"),
 	})
 	_, err := bot.Send(cfg)
 	if err != nil {
