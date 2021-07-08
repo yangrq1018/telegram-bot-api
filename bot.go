@@ -209,6 +209,7 @@ func (bot *BotAPI) UploadFile(endpoint string, params map[string]string, fieldna
 		params[fieldname] = f.String()
 
 		ms.WriteFields(params)
+		ms.WriteReader(fieldname, "", 0, bytes.NewBuffer(nil))
 	default:
 		return APIResponse{}, errors.New(ErrBadFileType)
 	}
