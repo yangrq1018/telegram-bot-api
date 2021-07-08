@@ -1,4 +1,4 @@
-module github.com/yangrq1018/telegram-bot-api
+module github.com/yangrq1018/telegram-bot-api/v5
 
 go 1.12
 
