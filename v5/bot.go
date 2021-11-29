@@ -4,6 +4,7 @@ package tgbotapi
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -31,6 +32,8 @@ type BotAPI struct {
 
 	Self            User       `json:"-"`
 	Client          HttpClient `json:"-"`
+	ctx             context.Context
+	cancel          context.CancelFunc
 	shutdownChannel chan interface{}
 
 	apiEndpoint string
@@ -56,13 +59,15 @@ func NewBotAPIWithAPIEndpoint(token, apiEndpoint string) (*BotAPI, error) {
 //
 // It requires a token, provided by @BotFather on Telegram and API endpoint.
 func NewBotAPIWithClient(token, apiEndpoint string, client HttpClient) (*BotAPI, error) {
+	ctx, cancel := context.WithCancel(context.Background())
 	bot := &BotAPI{
 		Token:           token,
 		Client:          client,
 		Buffer:          100,
 		shutdownChannel: make(chan interface{}),
-
-		apiEndpoint: apiEndpoint,
+		ctx:             ctx,
+		cancel:          cancel,
+		apiEndpoint:     apiEndpoint,
 	}
 
 	self, err := bot.GetMe()
@@ -88,6 +93,7 @@ func (bot *BotAPI) MakeRequest(endpoint string, params url.Values) (APIResponse,
 	if err != nil {
 		return APIResponse{}, err
 	}
+	req = req.WithContext(bot.ctx)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	resp, err := bot.Client.Do(req)
@@ -550,6 +556,7 @@ func (bot *BotAPI) StopReceivingUpdates() {
 	if bot.Debug {
 		log.Println("Stopping the update receiver routine...")
 	}
+	bot.cancel() // cancel all requests in action
 	close(bot.shutdownChannel)
 }
 
